@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}The Board — Main{% endblock %}
+{% block content %}
+  <section class="card composer">
+    <form method="post" action="{{ url_for('post') }}">
+      <input type="text" name="author" placeholder="Your name" maxlength="80">
+      <textarea name="message" placeholder="Pin a message to the board..." rows="3" required></textarea>
+      <button type="submit">Post</button>
+    </form>
+  </section>
+
+  <section class="board">
+    {% if posts %}
+      {% for post in posts %}
+        <article class="card pin">
+          <p class="message">{{ post.message }}</p>
+          <p class="meta">— {{ post.author }} · {{ post.created_at.strftime('%b %d, %Y %H:%M') }}</p>
+        </article>
+      {% endfor %}
+    {% else %}
+      <p class="empty">The board is empty. Be the first to post something!</p>
+    {% endif %}
+  </section>
+{% endblock %}

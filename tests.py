@@ -21,12 +21,19 @@ class Basic(unittest.TestCase):
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
         app.config['DEBUG'] = False
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + TEST_DB
         self.app = app.test_client()
+        with app.app_context():
+            db.create_all()
     '''
     These instructions are executed after each test
     '''
     def tearDown(self):
-        pass
+        with app.app_context():
+            db.session.remove()
+            db.drop_all()
+        if os.path.exists(TEST_DB):
+            os.remove(TEST_DB)
     '''
     This function tests if the primary page is loaded or not 
     '''
